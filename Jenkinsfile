@@ -206,11 +206,11 @@ pipeline {
 
                     docker run -d \
                         --name ${APP_NAME} \
-                        -p 8080:8080 \
+                        -p 9090:8080 \
                         ${DOCKER_IMAGE}:latest
                 """
 
-                echo "Application available at http://localhost:8080"
+                echo "Application available at http://localhost:9090"
 
             }
 
@@ -227,7 +227,7 @@ pipeline {
             echo """
             ==============================================
             PIPELINE SUCCESS
-            Application deployed on http://localhost:8080
+            Application deployed on http://localhost:9090
             ==============================================
             """
         }
