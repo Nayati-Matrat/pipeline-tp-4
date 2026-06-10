@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP Pipeline CI/CD</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #38bdf8;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        .badges {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        .badge {
+            padding: 0.4rem 1rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .badge-green  { background: #166534; color: #86efac; }
+        .badge-blue   { background: #1e3a5f; color: #93c5fd; }
+        .badge-orange { background: #7c2d12; color: #fdba74; }
+        .badge-purple { background: #4c1d95; color: #c4b5fd; }
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .card h3 { color: #38bdf8; margin-bottom: 0.5rem; }
+        .card p  { color: #94a3b8; font-size: 0.95rem; }
+        .status { color: #4ade80; font-weight: bold; }
+        .api-links { margin-top: 1.5rem; }
+        .api-links a {
+            display: inline-block;
+            margin: 0.3rem;
+            padding: 0.5rem 1.2rem;
+            background: #0284c7;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .api-links a:hover { background: #0369a1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TP Pipeline CI/CD</h1>
+        <p class="subtitle">Mini application web — Jenkins + Docker + Snyk</p>
+
+        <div class="badges">
+            <span class="badge badge-green">Spring Boot 3.2</span>
+            <span class="badge badge-blue">Docker</span>
+            <span class="badge badge-orange">Jenkins</span>
+            <span class="badge badge-purple">Snyk</span>
+        </div>
+
+        <div class="card">
+            <h3>Statut de l'application</h3>
+            <p>Application <span class="status">EN LIGNE</span> — déployée via pipeline CI/CD</p>
+        </div>
+
+        <div class="card">
+            <h3>Pipeline Jenkins</h3>
+            <p>Build Maven → Tests → Scan Snyk → Docker Build → Scan image → Deploy</p>
+        </div>
+
+        <div class="api-links">
+            <a href="/api/status">GET /api/status</a>
+            <a href="/api/hello">GET /api/hello</a>
+        </div>
+    </div>
+</body>
+</html>
