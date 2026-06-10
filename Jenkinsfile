@@ -88,7 +88,7 @@ pipeline {
                 echo "Downloading source code from branch: ${params.BRANCH}"
 
                 git branch: "${params.BRANCH}",
-                    url: 'https://github.com/YOUR_USERNAME/YOUR_REPO.git'
+                    url: 'https://github.com/Nayati-Matrat/devsecops-pipeline.git'
 
             }
 
