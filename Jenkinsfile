@@ -48,11 +48,14 @@ pipeline {
     }
 
 
+    tools {
+        maven 'Maven-3.9'
+    }
+
     environment {
 
         APP_NAME    = "web-app"
         DOCKER_IMAGE = "web-app"
-        // Credential "snyk-token" à créer dans Jenkins > Manage Jenkins > Credentials
         SNYK_TOKEN  = credentials('snyk-token')
 
     }
