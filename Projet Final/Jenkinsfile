@@ -1,0 +1,96 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven'
+    }
+
+    environment {
+        APP_NAME    = "product-api-devsecops"
+        TRIVY_EXE   = "C:\\ProgramData\\chocolatey\\bin\\trivy.exe"
+        SNYK_EXE    = "C:\\ProgramData\\chocolatey\\bin\\snyk.exe"
+    }
+
+    parameters {
+        string(name: 'NAME', defaultValue: 'DevOps User', description: 'Votre nom')
+        booleanParam(name: 'SKIP_TEST', defaultValue: false, description: 'Skip tests?')
+        booleanParam(name: 'SKIP_SNYK', defaultValue: false, description: 'Skip Snyk scan?')
+    }
+
+    stages {
+
+        stage('01 - PRINT PARAMETERS') {
+            steps {
+                echo "Hello ${params.NAME}"
+                echo "Skip tests: ${params.SKIP_TEST}"
+            }
+        }
+
+        stage('02 - BUILD') {
+            steps {
+                echo 'Compilation Maven...'
+                bat 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('03 - TEST') {
+            when {
+                expression { return !params.SKIP_TEST }
+            }
+            steps {
+                echo 'Tests unitaires...'
+                bat 'mvn test'
+            }
+        }
+
+        stage('04 - DOCKER BUILD') {
+            steps {
+                echo 'Construction image Docker...'
+                bat 'docker build -t %APP_NAME%:latest .'
+            }
+        }
+
+        stage('05 - TRIVY SCAN') {
+            steps {
+                echo 'Scan securite Trivy...'
+                bat '"%TRIVY_EXE%" image --severity HIGH,CRITICAL --exit-code 0 --output trivy-report.txt %APP_NAME%:latest'
+                bat 'type trivy-report.txt'
+            }
+        }
+
+        stage('06 - SNYK SCAN') {
+            when {
+                expression { return !params.SKIP_SNYK }
+            }
+            steps {
+                echo 'Scan dependances Snyk...'
+                withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
+                    bat """
+                    "%SNYK_EXE%" auth %SNYK_TOKEN%
+                    "%SNYK_EXE%" test --severity-threshold=high || exit /b 0
+                    """
+                }
+            }
+        }
+
+        stage('07 - DEPLOY') {
+            steps {
+                echo 'Deploiement local Docker...'
+                bat '''
+                docker stop product-api || exit /b 0
+                docker rm product-api || exit /b 0
+                docker run -d --name product-api -p 8081:8080 product-api-devsecops:latest
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Pipeline termine avec succes ! API disponible sur http://localhost:8081'
+        }
+        failure {
+            echo '❌ Echec du pipeline.'
+        }
+    }
+}
